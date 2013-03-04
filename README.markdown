@@ -14,12 +14,11 @@ Get Vert.x Charm
 
 You can get it with:
 
-~~
-$ mkdir -p ~/charms/precise
-$ cd ~/charms/precise
-$ git clone  dali:/CharmVertxApp.git  ~/charms/precise/vertx-app
-$ cd vertx-app
-~~
+> $ mkdir -p ~/charms/precise
+> $ cd ~/charms/precise
+> $ git clone  dali:/CharmVertxApp.git  ~/charms/precise/vertx-app
+> $ cd vertx-app
+
 
 
 Vert.x deploy
@@ -41,7 +40,7 @@ Vert.x deploy
 Application Expose
 --
 
-~~
-$ juju expose {myapp}
-~~
+
+> $ juju expose {myapp}
+
 
