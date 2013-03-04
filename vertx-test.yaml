@@ -1,0 +1,11 @@
+vertx-test: 
+  app_name: vertx-test
+  app_port: 8800
+  app_scm: git
+  app_url: ssh://your_gitserver_account@dali.htc.com:29418/vertx-test.git
+  app_key: your_private_key
+  git_host: dali.htc.com
+  git_port: 29418
+  app_branch:  master
+  install_root: /opt
+  app_user: ubuntu

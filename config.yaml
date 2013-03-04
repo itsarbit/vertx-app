@@ -1,0 +1,41 @@
+options:
+  app_name:
+    type: string
+    default: vertx-test
+    description: Application Name
+  app_port:
+    type: int
+    default: 8800
+    description: Port where the application will handle requests
+  app_scm:
+    type: string
+    default: git
+    description: Repository type (git/bzr/...)
+  app_url:
+    type: string
+    default: "ssh://your_gitserver_account@git.server.host:port/vertx-test.git"
+    description: Application repository ssh URL
+  app_key:
+    type: string
+    default: "your_private_key"
+    description: The private key path
+  git_host:
+    type: string
+    default: "your_git_server_host"
+    description:  The host name of the git server
+  git_port:
+    type: int
+    default: 29418
+    description: The port number of the git server
+  app_branch:
+    type: string
+    default: master
+    description: Application repository deployment branch
+  install_root:
+    type: string
+    default: /opt
+    description: Install the application in app_name under this directory
+  app_user:
+    type: string
+    default: ubuntu
+    description: run-as user

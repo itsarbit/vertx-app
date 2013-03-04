@@ -1,0 +1,4 @@
+name: vertx-app
+summary: "Deploy a vert.x application"
+description: "Deploy a user-defined vert.x application"
+maintainer: Arbit Chen <arbit_chen@htc.com>

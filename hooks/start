@@ -1,0 +1,2 @@
+#!/bin/bash
+#service ${app_name} restart || service ${app_name} start

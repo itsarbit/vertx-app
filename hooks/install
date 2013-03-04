@@ -1,0 +1,81 @@
+#!/bin/bash
+
+set -eu # -x for verbose logging to juju debug-log
+
+umask 002
+
+install_root=`config-get install_root`
+app_name=`config-get app_name`
+app_dir="$install_root/$app_name"
+app_user=`config-get app_user`
+app_scm=`config-get app_scm`
+app_url=`config-get app_url`
+app_key=`config-get app_key`
+git_host=`config-get git_host`
+git_port=`config-get git_port`
+app_branch=`config-get app_branch`
+app_port=`config-get app_port`
+
+apt-get -y install -qq git-core openjdk-7-jdk
+
+install_maven() {
+  juju-log "Installing maven.."
+  apt-get -y install -qq maven
+
+}
+[[ -x /usr/share/maven/bin   ]] || install_maven
+
+
+
+install_app() {
+  juju-log "Installing ${app_name}..."
+  #git clone ${app_url} ${app_dir} -b ${app_branch}
+  
+  #Temporarily add private key to ssh configuration file
+  cat > ~/.ssh/config <<EOS
+Host ${git_host}
+  Port ${git_port}
+  IdentityFile /var/lib/juju/units/${app_name}-0/charm/${app_key}
+  StrictHostKeyChecking no
+EOS
+  git clone ${app_url}  ${app_dir} -b ${app_branch}
+  #remove the file for safety
+  rm ~/.ssh/config
+  rm /var/lib/juju/units/${app_name}-0/charm/${app_key}
+  chown -Rf ${app_user}.${app_user} ${app_dir}
+  cat > /etc/init/${app_name}.conf <<EOS
+description "${app_name} vert.x server"
+ 
+start on (net-device-up
+          and local-filesystems
+          and runlevel [2345])
+stop on runlevel [!2345]
+ 
+expect fork
+respawn
+ 
+script
+  export HOME=/
+  export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
+   cd ${app_dir}
+  exec /usr/share/maven/bin/mvn vertx:run
+end script
+EOS
+
+}
+[[ -d ${app_dir} ]] || install_app
+
+
+configure_app() {
+  juju-log "Configuring ${app_name}..."
+  mkdir ${app_dir}/config
+  cat > ${app_dir}/config/config.yaml <<EOS
+name: ${app_name}
+listen_port: ${app_port}
+EOS
+}
+configure_app
+open-port $app_port
+
+#juju-log "starting app"
+service ${app_name} restart || service ${app_name} start
